@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.npm-cache/
+test-results/
+playwright-report/
+*.tsbuildinfo
+*.local
+.browsers/
+
+# Local credentials, generated evidence, and personal backups
+.env
+.env.*
+!.env.example
+*.log
+coverage/
+.openai/
+artifacts/
+backups/
+qa-academy-*.json
+qa-training-portfolio.*
+training-bug.*
+.DS_Store
