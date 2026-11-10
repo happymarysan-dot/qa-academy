@@ -152,7 +152,7 @@ export default function App() {
             <GraduationCap size={24} />
           </div>
           <span>
-            QA Academy<small>PRIVATE LEARNING SPACE</small>
+            QA Academy<small>PERSONAL LEARNING SPACE</small>
           </span>
         </a>
         <div className="sidebar-caption">ВАШЕ ПРОСТРАНСТВО</div>
@@ -187,8 +187,8 @@ export default function App() {
           <a href="#privacy" className="privacy-link">
             <LockKeyhole size={16} />
             <span>
-              Только на вашем устройстве
-              <small>Локально. Приватно. Без облака.</small>
+              Прогресс в вашем браузере
+              <small>Ответы и заметки хранятся локально.</small>
             </span>
           </a>
         </div>
@@ -289,7 +289,7 @@ export default function App() {
           <footer>
             <span>QA Academy · Учимся задавать правильные вопросы.</span>
             <a href="#privacy">
-              <LockKeyhole size={13} /> Local only
+              <LockKeyhole size={13} /> Прогресс локально
             </a>
           </footer>
         </main>

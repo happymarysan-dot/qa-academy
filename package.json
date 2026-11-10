@@ -11,7 +11,8 @@
     "lint": "eslint .",
     "test:e2e": "node scripts/playwright.mjs test",
     "format": "prettier --write src tests scripts *.ts *.js *.json *.md index.html",
-    "browsers:install": "node scripts/playwright.mjs install chromium"
+    "browsers:install": "node scripts/playwright.mjs install chromium",
+    "build:pages": "tsc -b && vite build --base=/qa-academy/"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

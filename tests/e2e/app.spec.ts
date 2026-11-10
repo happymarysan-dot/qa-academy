@@ -3,12 +3,12 @@ import { test, expect } from "@playwright/test";
 test("all twelve modules, navigation, local persistence and privacy", async ({
   page,
 }) => {
-  await page.goto("/");
+  await page.goto("./");
   await expect(
     page.getByRole("heading", { name: /Практика. Понимание/ }),
   ).toBeVisible();
   for (let i = 1; i <= 12; i++) {
-    await page.goto(`/#module/${i}`);
+    await page.goto(`./#module/${i}`);
     await expect(page.getByRole("tab", { name: "Уроки · 6" })).toBeVisible();
     await expect(page.locator(".lesson-nav button")).toHaveCount(6);
     await page
@@ -18,32 +18,30 @@ test("all twelve modules, navigation, local persistence and privacy", async ({
     await page.getByRole("tab", { name: "Практикум", exact: true }).click();
     await expect(page.locator("#module-panel")).not.toBeEmpty();
   }
-  await page.goto("/#module/1");
+  await page.goto("./#module/1");
   await page
     .getByPlaceholder("Что проверяю → данные → ожидаемый результат → риск")
     .fill("Boundary review");
   await page.getByRole("button", { name: "Добавить закладку" }).click();
   await page.getByRole("button", { name: "Отметить урок пройденным" }).click();
   await page.reload();
-  await page.goto("/#bookmarks");
+  await page.goto("./#bookmarks");
   await expect(page.getByRole("heading", { name: /SDLC, STLC/ })).toBeVisible();
-  await page.goto("/#privacy");
+  await page.goto("./#privacy");
   await expect(
     page.getByRole("heading", { name: "Хранилище — не шифрование" }),
   ).toBeVisible();
 });
 test("SQLite worker executes and grades locally; no external requests", async ({
   page,
+  baseURL,
 }) => {
   const external: string[] = [];
   page.on("request", (r) => {
-    if (
-      !r.url().startsWith("http://127.0.0.1:3000") &&
-      !r.url().startsWith("data:")
-    )
+    if (!r.url().startsWith(baseURL!) && !r.url().startsWith("data:"))
       external.push(r.url());
   });
-  await page.goto("/#module/4/practice");
+  await page.goto("./#module/4/practice");
   await page.getByLabel(/Задание 1/).selectOption("2");
   await page
     .getByLabel("Ваш SQL")
@@ -60,12 +58,12 @@ test("SQLite worker executes and grades locally; no external requests", async ({
 test("registration prediction and checkout double submission", async ({
   page,
 }) => {
-  await page.goto("/#module/2/practice");
+  await page.goto("./#module/2/practice");
   await page.getByLabel("Возраст", { exact: true }).fill("17");
   await page.getByLabel("Мой прогноз").selectOption("error");
   await page.getByRole("button", { name: "Выполнить проверку" }).click();
   await expect(page.getByRole("status")).toContainText("Прогноз верный");
-  await page.goto("/#module/9/practice");
+  await page.goto("./#module/9/practice");
   await page.getByRole("button", { name: "Pay · test key order-1" }).click();
   await page.getByRole("button", { name: "Pay · test key order-1" }).click();
   await expect(page.getByRole("status")).toContainText(
@@ -73,7 +71,7 @@ test("registration prediction and checkout double submission", async ({
   );
 });
 test("quiz scoring and saved attempt", async ({ page }) => {
-  await page.goto("/#module/1");
+  await page.goto("./#module/1");
   await page.getByRole("tab", { name: "Проверка · 10" }).click();
   const correct = [0, 1, 2, 0, 1, 2, 0, 0, [0, 1], 1];
   for (let i = 0; i < 10; i++) {
@@ -93,7 +91,7 @@ test("quiz scoring and saved attempt", async ({ page }) => {
 });
 test("mobile layout and theme", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/");
+  await page.goto("./");
   await page.getByRole("button", { name: "Открыть меню" }).click();
   await page.getByRole("link", { name: /Программа/ }).click();
   await expect(
@@ -108,11 +106,11 @@ test("mobile layout and theme", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
 });
 test("backup export, reset, restore and invalid import", async ({ page }) => {
-  await page.goto("/#module/1");
+  await page.goto("./#module/1");
   await page
     .getByPlaceholder("Что проверяю → данные → ожидаемый результат → риск")
     .fill("Backup evidence");
-  await page.goto("/#privacy");
+  await page.goto("./#privacy");
   const downloaded = page.waitForEvent("download");
   await page.getByRole("button", { name: "Экспорт JSON" }).click();
   const file = await downloaded;
@@ -147,7 +145,7 @@ test("backup export, reset, restore and invalid import", async ({ page }) => {
 test("flashcard recall, plan, search and interview self-rating", async ({
   page,
 }) => {
-  await page.goto("/#flashcards");
+  await page.goto("./#flashcards");
   await page.getByRole("button", { name: "Открыть объяснение" }).click();
   await page.getByRole("button", { name: "Помню", exact: true }).click();
   expect(
@@ -157,7 +155,7 @@ test("flashcard recall, plan, search and interview self-rating", async ({
           .length,
     ),
   ).toBe(1);
-  await page.goto("/#plan");
+  await page.goto("./#plan");
   await page.locator(".plan-check input").first().check();
   await expect(
     page.getByRole("heading", { name: "1 из 14 шагов" }),
@@ -167,7 +165,7 @@ test("flashcard recall, plan, search and interview self-rating", async ({
     .fill("idempotency");
   await expect(page.locator(".result").first()).toBeVisible();
   await page.getByRole("button", { name: "Очистить поиск" }).click();
-  await page.goto("/#interview");
+  await page.goto("./#interview");
   await page.getByRole("button", { name: "Начать интервью" }).click();
   await expect(
     page.getByText("MODEL ANSWER · ADAPT TO YOUR ACTUAL EXPERIENCE"),
@@ -191,11 +189,11 @@ test("flashcard recall, plan, search and interview self-rating", async ({
 test("mock network, requirements, game and simulated browser exercises", async ({
   page,
 }) => {
-  await page.goto("/#module/5/practice");
+  await page.goto("./#module/5/practice");
   await page.getByLabel(/Какой запрос/).selectOption("500");
   await page.getByRole("button", { name: "Проверить гипотезу" }).click();
   await expect(page.locator(".feedback")).toContainText("Верно.");
-  await page.goto("/#module/7/practice");
+  await page.goto("./#module/7/practice");
   for (let i = 0; i < 3; i++)
     await page.locator(".option input").nth(i).check();
   await page.getByRole("button", { name: "Проверить анализ" }).click();
@@ -207,7 +205,7 @@ test("mock network, requirements, game and simulated browser exercises", async (
   await expect(
     page.getByLabel("Матрица AC → Case → Expected → риск"),
   ).toHaveValue("AC-1 | TC-1 | 90 EUR | 15");
-  await page.goto("/#module/8/practice");
+  await page.goto("./#module/8/practice");
   await page.getByRole("button", { name: "Move right" }).click();
   await page.getByRole("button", { name: "Move right" }).click();
   await page.getByLabel("Jump при следующем движении").check();
@@ -215,7 +213,7 @@ test("mock network, requirements, game and simulated browser exercises", async (
   await expect(page.getByRole("status")).toContainText("STUCK");
   await page.getByRole("button", { name: "Reset build" }).click();
   await expect(page.getByRole("status")).toContainText("ready");
-  await page.goto("/#module/10/practice");
+  await page.goto("./#module/10/practice");
   await page.getByRole("button", { name: "1 · goto" }).click();
   await page.getByRole("button", { name: "2 · locate" }).click();
   await page.getByRole("button", { name: "3 · assert" }).click();
@@ -225,7 +223,7 @@ test("mock network, requirements, game and simulated browser exercises", async (
 test("bug builder exports, test run persistence and portfolio kit", async ({
   page,
 }) => {
-  await page.goto("/#module/6/practice");
+  await page.goto("./#module/6/practice");
   const data = {
     Заголовок: "Cart: no discount at 100 EUR",
     "Среда и build": "Local training build 1.0",
@@ -253,7 +251,7 @@ test("bug builder exports, test run persistence and portfolio kit", async ({
   await page.getByLabel("Статус TC-2").selectOption("Failed");
   await page.reload();
   await expect(page.getByLabel("Статус TC-2")).toHaveValue("Failed");
-  await page.goto("/#module/12/practice");
+  await page.goto("./#module/12/practice");
   await expect(page.locator("tbody tr")).toHaveCount(18);
   const portfolio = page.waitForEvent("download");
   await page.getByRole("button", { name: "Cases CSV" }).click();

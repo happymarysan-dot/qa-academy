@@ -23,3 +23,11 @@ Screenshots находятся в `artifacts/`: dashboard-desktop.png, dashboard
 Реальные Postman/Charles/Fiddler/Unreal installations, сторонние API, mobile hardware, реальный payment provider и production нагрузка не запускались. Для них есть инструкции, exercises и явные ограничения. Screen-reader review и полная WCAG assessment не проводились. Свободные ответы не AI-graded; seed capstone defects иллюстративны. LocalStorage и backups не зашифрованы.
 
 Production preview оставлен работающим только на loopback. Для обычной учебы: `npm run build`, затем `npm run preview`; dev также доступен через `npm run dev`. Одновременно используйте только один сервер на порту 3000.
+
+## GitHub Pages preparation · 2026-11-10
+
+- `npm run lint`, all 39 unit tests and `npm run build:pages` passed.
+- All 9 Playwright smoke tests passed against the production preview at `http://127.0.0.1:3000/qa-academy/` with a 390px mobile check, real SQL Worker/WASM, persistence and JSON/Markdown/CSV exports.
+- Generated JS/CSS and WASM paths include `/qa-academy/`; hash routes stay under that prefix.
+- Public-hosting privacy text distinguishes public lessons from browser-local progress; the storage key and export/import format are unchanged.
+- `.github/workflows/pages.yml` builds and publishes only static `dist`. GitHub repository Settings → Pages → Source must be set to GitHub Actions before the first deployment.
